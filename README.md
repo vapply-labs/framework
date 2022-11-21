@@ -2,7 +2,7 @@
 
 ![CI Status](https://github.com/vapply-labs/framework/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/vapply-labs/framework/branch/main/graph/badge.svg?token=V8HOCF619C)](https://codecov.io/gh/vapply-labs/framework)
-[![Go Report Card](https://goreportcard.com/badge/github.com/vapply-labs/framework)](https://goreportcard.com/badge/github.com/vapply-labs/framework)
+[![Go Report Card](https://goreportcard.com/badge/github.com/vapply-labs/framework)](https://goreportcard.com/report/github.com/vapply-labs/framework)
 
 The main library for the job application monitor and additional utilities.
 
