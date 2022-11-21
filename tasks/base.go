@@ -10,4 +10,9 @@ type JobMonitorTask interface {
 
 	// Call this callback for each new job found.
 	OnNewJob(job *jobs.Job) error
+
+	// Starts the monitor
+	Start() error
+
+	IsStarted() bool
 }
