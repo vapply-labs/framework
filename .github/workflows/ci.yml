@@ -20,7 +20,7 @@ jobs:
           cache: true
 
       - name: Install
-        run: go install
+        run: go install ./...
 
       - name: Test
         run: go test -v ./...
