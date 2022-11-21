@@ -14,5 +14,8 @@ type JobMonitorTask interface {
 	// Starts the monitor
 	Start() error
 
-	IsStarted() bool
+	// Stops monitoring
+	Stop() error
+
+	IsRunning() bool
 }
