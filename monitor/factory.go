@@ -1,9 +1,8 @@
-package modules
+package monitor
 
 import (
 	"github.com/vapply-labs/framework/jobs"
 	"github.com/vapply-labs/framework/modules/yelp"
-	"github.com/vapply-labs/framework/tasks"
 )
 
 // Creates a monitor task for each given company.
@@ -11,8 +10,8 @@ import (
 //
 // TODO: If need to support many many websites, initialize struct dynamically at runtime
 // See: https://stackoverflow.com/questions/7850140/how-do-you-create-a-new-instance-of-a-struct-from-its-type-at-run-time-in-go
-func CreateMonitorTasks(companies []jobs.SupportedCompany) []tasks.JobMonitorTask {
-	tasks := []tasks.JobMonitorTask{}
+func CreateMonitorTasks(companies []jobs.SupportedCompany) []JobMonitorTask {
+	tasks := []JobMonitorTask{}
 	for _, company := range companies {
 		if company == "Yelp" {
 			tasks = append(tasks, &yelp.YelpTask{})

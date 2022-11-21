@@ -1,4 +1,4 @@
-package tasks
+package monitor
 
 import "github.com/vapply-labs/framework/jobs"
 

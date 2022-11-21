@@ -5,8 +5,6 @@ import (
 
 	"github.com/samber/lo"
 	"github.com/vapply-labs/framework/jobs"
-	"github.com/vapply-labs/framework/modules"
-	"github.com/vapply-labs/framework/tasks"
 	"go.uber.org/zap"
 )
 
@@ -26,7 +24,7 @@ type MonitorsManager interface {
 }
 
 type BaseMonitorsManager struct {
-	taskCache map[jobs.SupportedCompany]tasks.JobMonitorTask
+	taskCache map[jobs.SupportedCompany]JobMonitorTask
 	logger    *zap.SugaredLogger
 }
 
@@ -53,7 +51,7 @@ func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompan
 		return true
 	})
 
-	monitorTasks := modules.CreateMonitorTasks(filteredCompanies)
+	monitorTasks := CreateMonitorTasks(filteredCompanies)
 
 	if m.logger != nil {
 		createdTasksLog := fmt.Sprintf("StartMonitorTasks: created %d tasks; %d companies filtered out", len(monitorTasks), len(companies)-len(filteredCompanies))
