@@ -8,6 +8,12 @@ The main library for the job application monitor and additional utilities.
 
 You can find the high-level documentation in `/docs`.
 
+## Getting Started
+
+```bash
+go get https://github.com/vapply-labs/framework
+```
+
 ## Getting Started [Contributor]
 
 Make sure your go version is at least `go 1.19`.
