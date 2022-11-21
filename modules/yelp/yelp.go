@@ -1,4 +1,4 @@
-package tasks
+package yelp
 
 import "github.com/vapply-labs/framework/jobs"
 

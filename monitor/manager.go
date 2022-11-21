@@ -5,6 +5,7 @@ import (
 
 	"github.com/samber/lo"
 	"github.com/vapply-labs/framework/jobs"
+	"github.com/vapply-labs/framework/modules"
 	"github.com/vapply-labs/framework/tasks"
 	"go.uber.org/zap"
 )
@@ -52,7 +53,7 @@ func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompan
 		return true
 	})
 
-	monitorTasks := tasks.CreateMonitorTasks(filteredCompanies)
+	monitorTasks := modules.CreateMonitorTasks(filteredCompanies)
 
 	if m.logger != nil {
 		createdTasksLog := fmt.Sprintf("StartMonitorTasks: created %d tasks; %d companies filtered out", len(monitorTasks), len(companies)-len(filteredCompanies))
