@@ -1,0 +1,25 @@
+name: Go CI
+
+# Only run on go lang files or this yml
+on:
+  paths:
+    - "**.go"
+    - ".github/workflows/ci.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+          cache: true
+
+      - name: Install
+        run: go get .
+
+      - name: Test
+        run: go test -v ./...
