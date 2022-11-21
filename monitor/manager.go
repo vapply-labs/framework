@@ -13,25 +13,24 @@ import (
 type MonitorsManager interface {
 	// Start a monitor task for each given company.
 	// The logger can be optional (specify nil)
-	StartMonitorTasks(companies []jobs.SupportedCompany, logger *zap.SugaredLogger) error
+	StartMonitorTasks(companies []jobs.SupportedCompany) error
 
 	// Stop monitor tasks corresponding to each given company
-	// The logger can be optional (specify nil)
-	StopMonitorTasks(companies []jobs.SupportedCompany, logger *zap.SugaredLogger) error
+	StopMonitorTasks(companies []jobs.SupportedCompany) error
 
 	// Stop all known running tasks.
-	// The logger can be optional (specify nil)
-	StopAll(logger *zap.SugaredLogger) error
+	StopAll() error
 }
 
 type BaseMonitorsManager struct {
 	currMonitoredCompanies map[jobs.SupportedCompany]tasks.JobMonitorTask
+	logger                 *zap.SugaredLogger
 }
 
-func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompany, logger *zap.SugaredLogger) error {
+func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompany) error {
 	if len(companies) == 0 {
-		if logger != nil {
-			logger.Debugw("no tasks created", "fn", "StartMonitorTasks")
+		if m.logger != nil {
+			m.logger.Debugw("no tasks created", "fn", "StartMonitorTasks")
 		}
 
 		return nil
@@ -51,9 +50,9 @@ func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompan
 
 	monitorTasks := tasks.CreateMonitorTasks(filteredCompanies)
 
-	if logger != nil {
+	if m.logger != nil {
 		createdTasksLog := fmt.Sprintf("StartMonitorTasks: created %d tasks; %d companies filtered out", len(monitorTasks), len(companies)-len(filteredCompanies))
-		logger.Debugw(createdTasksLog, "fn", "StartMonitorTasks")
+		m.logger.Debugw(createdTasksLog, "fn", "StartMonitorTasks")
 	}
 
 	for i, task := range monitorTasks {
