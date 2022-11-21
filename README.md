@@ -1,6 +1,6 @@
 # framework
 
-![CI Status](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
+![CI Status](https://github.com/vapply-labs/framework/actions/workflows/ci.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/vapply-labs/framework/badge.svg?branch=main)](https://coveralls.io/github/vapply-labs/framework?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/vapply-labs/framework)](https://goreportcard.com/badge/github.com/vapply-labs/framework)
 
