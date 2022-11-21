@@ -3,16 +3,15 @@ package scrapers
 import (
 	"fmt"
 
-	"github.com/samber/lo"
 	"github.com/vapply-labs/framework/jobs"
 )
 
 type WebScraper interface {
-	Scrape() []jobs.Job
+	Scrape() []*jobs.Job
 }
 
 type WebScraperPlugin interface {
-	Filter(content interface{}) ([]jobs.Job, error)
+	Filter(content interface{}) ([]*jobs.Job, error)
 	Name() string
 }
 
@@ -20,8 +19,8 @@ type JobInfoScraper struct {
 	Plugins []WebScraperPlugin
 }
 
-func (s *JobInfoScraper) Scrape() ([]jobs.Job, error) {
-	parsedJobs := []jobs.Job{}
+func (s *JobInfoScraper) Scrape() ([]*jobs.Job, error) {
+	parsedJobs := []*jobs.Job{}
 	for _, plugin := range s.Plugins {
 		pluginJobs, err := plugin.Filter("dummy content")
 		if err != nil {
@@ -31,5 +30,5 @@ func (s *JobInfoScraper) Scrape() ([]jobs.Job, error) {
 	}
 
 	// Remove duplicate jobs (may not work because all jobs are pointers)
-	return lo.Uniq(parsedJobs), nil
+	return jobs.GetUniqueJobs(parsedJobs), nil
 }
