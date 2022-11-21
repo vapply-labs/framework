@@ -11,15 +11,17 @@ import (
 
 // Allows for flexibility to create different versions of monitors managers if needed
 type MonitorsManager interface {
-	// Start a monitor task for each given company.
-	// The logger can be optional (specify nil)
+	// Start a monitor task for each given company. If a task does not already exist for that company,
+	// create that task.
 	StartMonitorTasks(companies []jobs.SupportedCompany) error
 
 	// Stop monitor tasks corresponding to each given company
-	StopMonitorTasks(companies []jobs.SupportedCompany) error
+	// Returns the companies that had a successful stop (i.e. exist and were running)
+	StopMonitorTasks(companies []jobs.SupportedCompany) ([]jobs.SupportedCompany, error)
 
 	// Stop all known running tasks.
-	StopAll() error
+	// Returns the companies that had a successful stop (i.e. exist and were running)
+	StopAll() ([]jobs.SupportedCompany, error)
 }
 
 type BaseMonitorsManager struct {
@@ -27,6 +29,8 @@ type BaseMonitorsManager struct {
 	logger    *zap.SugaredLogger
 }
 
+// Start a monitor task for each given company. If a task does not already exist for that company,
+// create that task.
 func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompany) error {
 	if len(companies) == 0 {
 		if m.logger != nil {
@@ -70,15 +74,34 @@ func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompan
 
 // Ensures that all tasks for the companies are stopped if they exist.
 // Throws error when we fail to properly stop a running task.
-func (m *BaseMonitorsManager) StopMonitorTasks(companies []jobs.SupportedCompany) error {
+func (m *BaseMonitorsManager) StopMonitorTasks(companies []jobs.SupportedCompany) ([]jobs.SupportedCompany, error) {
+	stopped := []jobs.SupportedCompany{}
 	for _, company := range companies {
 		if cachedTask, ok := m.taskCache[company]; ok && cachedTask.IsRunning() {
 			err := cachedTask.Stop()
 			if err != nil {
-				return fmt.Errorf("err stopping task for %s: %s", company, err)
+				return nil, fmt.Errorf("err stopping task for %s: %s", company, err)
 			}
+			stopped = append(stopped, company)
 		}
 	}
 
-	return nil
+	return stopped, nil
+}
+
+// Ensures that all tasks for the companies are stopped if they exist.
+// Throws error when we fail to properly stop a running task.
+func (m *BaseMonitorsManager) StopAll() ([]jobs.SupportedCompany, error) {
+	stopped := []jobs.SupportedCompany{}
+	for company, task := range m.taskCache {
+		if task.IsRunning() {
+			err := task.Stop()
+			if err != nil {
+				return nil, fmt.Errorf("err stopping task for %s: %s", company, err)
+			}
+			stopped = append(stopped, company)
+		}
+	}
+
+	return stopped, nil
 }
