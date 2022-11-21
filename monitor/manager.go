@@ -23,8 +23,8 @@ type MonitorsManager interface {
 }
 
 type BaseMonitorsManager struct {
-	currMonitoredCompanies map[jobs.SupportedCompany]tasks.JobMonitorTask
-	logger                 *zap.SugaredLogger
+	taskCache map[jobs.SupportedCompany]tasks.JobMonitorTask
+	logger    *zap.SugaredLogger
 }
 
 func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompany) error {
@@ -40,7 +40,7 @@ func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompan
 	// If a task is cached and already running, ignore it in this function.
 	// For others (i.e. cached and not started, create new tasks and start those tasks)
 	filteredCompanies := lo.Filter(companies, func(company jobs.SupportedCompany, index int) bool {
-		if cachedTask, ok := m.currMonitoredCompanies[company]; ok && cachedTask.IsStarted() {
+		if cachedTask, ok := m.taskCache[company]; ok && cachedTask.IsRunning() {
 			// Ignore this company
 			return false
 		}
@@ -60,8 +60,24 @@ func (m *BaseMonitorsManager) StartMonitorTasks(companies []jobs.SupportedCompan
 		if err != nil {
 			return fmt.Errorf("initializing monitor task for %s failed with err: %s", companies[i], err)
 		}
+
 		// Cache the task
-		m.currMonitoredCompanies[companies[i]] = task
+		m.taskCache[companies[i]] = task
+	}
+
+	return nil
+}
+
+// Ensures that all tasks for the companies are stopped if they exist.
+// Throws error when we fail to properly stop a running task.
+func (m *BaseMonitorsManager) StopMonitorTasks(companies []jobs.SupportedCompany) error {
+	for _, company := range companies {
+		if cachedTask, ok := m.taskCache[company]; ok && cachedTask.IsRunning() {
+			err := cachedTask.Stop()
+			if err != nil {
+				return fmt.Errorf("err stopping task for %s: %s", company, err)
+			}
+		}
 	}
 
 	return nil
