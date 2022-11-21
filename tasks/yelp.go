@@ -21,7 +21,12 @@ func (t *YelpTask) Start() error {
 	return nil
 }
 
+// Stops the monitor
+func (t *YelpTask) Stop() error {
+	return nil
+}
+
 // Starts the monitor
-func (t *YelpTask) IsStarted() bool {
+func (t *YelpTask) IsRunning() bool {
 	return false
 }
