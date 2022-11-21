@@ -13,7 +13,7 @@ You can find the high-level documentation in `/docs`.
 Make sure your go version is at least `go 1.19`.
 
 ```bash
-go install
+go install ./...
 ```
 
 Now, you can feel free to run tests or contribute!
