@@ -65,3 +65,9 @@ func (j *Job) Validate() error {
 
 	return nil
 }
+
+func GetUniqueJobs(jobsToFilter []*Job) []*Job {
+	return lo.UniqBy(jobsToFilter, func(job *Job) string {
+		return string(job.Company) + job.Title + string(job.Season) + job.Location
+	})
+}
